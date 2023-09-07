@@ -1,0 +1,72 @@
+//音があるので消してください.
+let ball = {x:200,y:0,vx:0,vy:0,px:5,py:5,hit:"no",i:0,score:0,a:0 ,frame:0}
+let music;
+function preload(){
+ music = loadSound('sound/don.mp3') 
+}
+function setup() {
+  createCanvas(400, 400);
+  angleMode(DEGREES);
+  fill(255)
+  frameRate(60);
+}
+function draw(){
+  colorMode(RGB)
+  background("black")
+  //加速度と座標と動く速度の設定
+  ball.px += ball.vx
+  ball.x += ball.px
+  ball.py += ball.vy
+  ball.y += ball.py
+  //弾
+  rect(ball.x,ball.y,10,10)
+  //反射板
+  rect(0,mouseY,10,100)
+  //壁反射
+  if(ball.x > 390 || ball.x == 390){
+    ball.px = ball.px * -1
+    music.play();
+  }
+  if(ball.y > 390 || ball.y == 390){
+    ball.py = ball.py * -1
+    music.play();
+  }
+  if(ball.y < 0 || ball.y == 0 ){
+    ball.py = ball.py * -1
+    music.play();
+  }
+  //ここまで
+  //ゲームオーバー
+  if(ball.x < -20 || ball.x == -20 ){
+    
+  }
+  if(ball.hit == "yes"){
+    if(ball.i == 10){
+      ball.hit = "no"
+      ball.i = 0  
+    }
+   ball.i += 1
+  }else if(ball.hit == "no"){
+    hit();
+  }
+  //フレームレートの更新速度↓
+  if(ball.a == 5){
+    ball.frame = round(frameRate());
+    ball.a = 0;
+  }
+  ball.a++;
+  textSize(12)
+  text(ball.frame + "fps",365,10,90,80);
+  textSize(100)
+  text(ball.score,180,100,300,300);
+}
+function hit(){
+  //反射のプログラム
+  if(ball.y > mouseY && ball.y < mouseY + 100 && ball.x < 15){
+    ball.score++;
+    ball.py = sin(mouseY + 50 - ball.y - 180) * 3
+    ball.px = ball.score * 0.1 + ball.px * -1
+    ball.hit = "yes"
+  }
+}
+
